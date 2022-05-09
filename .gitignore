@@ -1,0 +1,5 @@
+treeSim/HIV_treeSim
+treeSim/test_functions
+dnaSim/dna_sim
+dnaSim/test_dna_functions
+*.o
