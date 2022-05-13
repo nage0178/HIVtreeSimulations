@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
         strncpy(controlFile, optarg, 100);
         parseControlFile(controlFile, sampleTimesFile, &mLBlood, parameters,
           &probLatent, &reactLatent, &probDefect, &latIncompDeath, &latCompDeath,
-          &RGSeed, seedChange, volChange, sampleFileChange);
+          &RGSeed, &seedChange, &volChange, sampleFileChange);
         break;
       /* Seed */
       case 's':
@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
           exit(1);
         }
         RGSeed = strtoul(optarg, &endPtr, 10);
-        seedChange = 1;
+        seedChange++;
         break;
       /* Input file */
       case 'i':
@@ -190,7 +190,7 @@ int main(int argc, char **argv) {
           exit(1);
         }
         mLBlood = atof(optarg);
-        volChange = 1;
+        volChange++;
         break;
       /* Changes the time of the checkpoint from the default time */
       case 't':
@@ -295,6 +295,11 @@ int main(int argc, char **argv) {
 
 /* If the run is starting fresh (no checkpoint)*/
 if (loadCheckPoint == 0) {
+    if (seedChange > 1 || volChange > 1) {
+	fprintf(stderr, "The seed and volumn cannot be specified multiple times. Exiting.\n");
+	exit(1);
+    }
+    printf("%d %d\n", seedChange, volChange); 
   /* Ensuring units match the volume of blood*/
   parameters[0] = parameters[0] * mLBlood;
   parameters[1] = parameters[1] / mLBlood;
@@ -314,6 +319,8 @@ if (loadCheckPoint == 0) {
   sampleFileLength = findFileLength(sampleTimesFile);
 
 } else {
+
+
   // Sets parameters to be equal to those used before checkpoint
     mLBlood = counts->mLBlood;
     parameters[0] = counts->lambda;

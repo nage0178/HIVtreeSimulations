@@ -655,7 +655,7 @@ struct Node** reallocArrayDecrease(long int* sizeArrayOld, struct Node** array, 
 void parseControlFile(char* fileName, char* sampleTime, double* mLBlood,
 double* parameters, double* probLatent, double* reactLatent, double* probDefect,
 double* latIncompDeath, double* latCompDeath, unsigned int* seed,
-int seedChange, int volChange, int sampleFileChange) {
+int* seedChange, int* volChange, int sampleFileChange) {
 
   FILE *file;
   file = fopen(fileName, "r");
@@ -723,7 +723,8 @@ int seedChange, int volChange, int sampleFileChange) {
     /* Checks if the regular expression matched was for the string */
     if ( regMatchString == 0 && sampleFileChange != 1) {
       strcpy(sampleTime, input);
-    } else if (strcmp(removeWhite, "volume") == 0 && volChange != 1) {
+    } else if (strcmp(removeWhite, "volume") == 0) {
+	(*volChange)++;
         *mLBlood = strtod(input, &ptr);
 
     } else if (strcmp(removeWhite, "lamdba") == 0) {
@@ -756,8 +757,9 @@ int seedChange, int volChange, int sampleFileChange) {
     } else if (strcmp(removeWhite, "tau") == 0) {
         *latIncompDeath = strtod(input, &ptr);
 
-    } else if (strcmp(removeWhite, "seed") == 0 && seedChange != 1) {
+    } else if (strcmp(removeWhite, "seed") == 0) {
         *seed = strtoul(input, &ptr, 10);
+	(*seedChange)++;
 
     } else if (strcmp(removeWhite, "sigma") == 0) {
         *latCompDeath = strtod(input, &ptr);

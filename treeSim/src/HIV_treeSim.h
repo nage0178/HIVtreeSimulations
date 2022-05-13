@@ -157,7 +157,7 @@ struct Node** reallocArrayDecrease(long int* sizeArrayOld, struct Node** array, 
 
 void parseControlFile(char* fileName, char* sampleTime, double* mLBlood,
 double* parameters, double* probLatent, double* reactLatent, double* probDefect,
-double* latIncompDeath, double* latCompDeath, unsigned int* seed, int seedChange, int volChange, int sampleFileChange);
+double* latIncompDeath, double* latCompDeath, unsigned int* seed, int* seedChange, int* volChange, int sampleFileChange);
 
 
 void findCellTypes(struct Node** activeArray, struct Node** virusArray, struct Node** latentIncompArray, struct Node** latentCompArray,
