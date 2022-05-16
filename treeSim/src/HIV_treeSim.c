@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
         strncpy(controlFile, optarg, 100);
         parseControlFile(controlFile, sampleTimesFile, &mLBlood, parameters,
           &probLatent, &reactLatent, &probDefect, &latIncompDeath, &latCompDeath,
-          &RGSeed, &seedChange, &volChange, sampleFileChange);
+          &RGSeed, &seedChange, &volChange, &sampleFileChange);
         break;
       /* Seed */
       case 's':
@@ -154,7 +154,7 @@ int main(int argc, char **argv) {
       /* Input file */
       case 'i':
         strncpy(sampleTimesFile, optarg, 100);
-        sampleFileChange = 1;
+        sampleFileChange++;
         break;
       /* Output file */
       case 'o':
@@ -295,11 +295,12 @@ int main(int argc, char **argv) {
 
 /* If the run is starting fresh (no checkpoint)*/
 if (loadCheckPoint == 0) {
-    if (seedChange > 1 || volChange > 1) {
-	fprintf(stderr, "The seed and volumn cannot be specified multiple times. Exiting.\n");
+    if (seedChange > 1 || volChange > 1 || sampleFileChange > 1) {
+	fprintf(stderr, "Options cannot be specified multiple times. Check no options are specified both in the command line and in the control file. Exiting.\n");
+
 	exit(1);
     }
-    printf("%d %d\n", seedChange, volChange); 
+
   /* Ensuring units match the volume of blood*/
   parameters[0] = parameters[0] * mLBlood;
   parameters[1] = parameters[1] / mLBlood;

@@ -655,7 +655,7 @@ struct Node** reallocArrayDecrease(long int* sizeArrayOld, struct Node** array, 
 void parseControlFile(char* fileName, char* sampleTime, double* mLBlood,
 double* parameters, double* probLatent, double* reactLatent, double* probDefect,
 double* latIncompDeath, double* latCompDeath, unsigned int* seed,
-int* seedChange, int* volChange, int sampleFileChange) {
+int* seedChange, int* volChange, int* sampleFileChange) {
 
   FILE *file;
   file = fopen(fileName, "r");
@@ -721,7 +721,8 @@ int* seedChange, int* volChange, int sampleFileChange) {
     char* input = removeWhite + strlen(removeWhite) + 1;
 
     /* Checks if the regular expression matched was for the string */
-    if ( regMatchString == 0 && sampleFileChange != 1) {
+    if ( regMatchString == 0) {
+	(*sampleFileChange)++;
       strcpy(sampleTime, input);
     } else if (strcmp(removeWhite, "volume") == 0) {
 	(*volChange)++;
