@@ -1371,7 +1371,7 @@ void writeLog(char* outfile, double * parameters, int sampleFileLength, long int
   sprintf(line, "lambda: \t%f\n", lambdaInput);
   fputs(line, file);
 
-  sprintf(line, "kappa: \t\t%f\n", kappaInput);
+  sprintf(line, "kappa: \t\t%.10f\n", kappaInput);
   fputs(line, file);
 
   sprintf(line, "d: \t\t%f\n", parameters[2]);
@@ -1405,7 +1405,7 @@ void writeLog(char* outfile, double * parameters, int sampleFileLength, long int
 
   //Sample times info, initial cell concentrations
   //
-  sprintf(line, "\nInitial Conditions:\n", parameters[5]);
+  sprintf(line, "\nInitial Conditions:\n");
   fputs(line, file);
 
 
