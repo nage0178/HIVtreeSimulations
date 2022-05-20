@@ -84,6 +84,8 @@ int main(int argc, char **argv) {
   parameters[3] = .4;                    /* delta, infectedDeath */
   parameters[4] = 6500;                 /* p (or pi), virusBirth */
   parameters[5] = 23;                   /* c, virusDeath */
+  double lambdaInput; 
+  double kappaInput; 
 
   double probLatent       = .000045;    /* eta, probLatent */
   double reactLatent      = .000057;    /* alpha, reactLatent */
@@ -302,6 +304,8 @@ if (loadCheckPoint == 0) {
     }
 
   /* Ensuring units match the volume of blood*/
+  lambdaInput = parameters[0];
+  kappaInput = parameters[1];
   parameters[0] = parameters[0] * mLBlood;
   parameters[1] = parameters[1] / mLBlood;
 
@@ -311,6 +315,7 @@ if (loadCheckPoint == 0) {
   }
   gsl_rng_set(r,RGSeed);
   writeSeed(RGSeed, outfile);
+
 
   /* Empirical measurements of kappa are for productively infected cells.
   We need to take this into account */
@@ -410,6 +415,12 @@ if (loadCheckPoint == 0) {
       totSampleLatent = totSampleLatent + numSampleLatent[i];
     }
 
+    writeLog(outfile, parameters, sampleFileLength, numVirusInit,
+               numCellUninfectInit, numCellInfectInit, numLatentCompInit,
+               numLatentIncompInit, sampleTimes, numSampleVirus,
+               numSampleLatent, mLBlood, probLatent, reactLatent,
+               probDefect, latIncompDeath, latCompDeath, lambdaInput, kappaInput);
+
     /* Create arrays for the tips to be stored in */
     maxActive =  10000 * mLBlood;
     maxVirus = 1000000 * mLBlood;
@@ -474,11 +485,12 @@ if (loadCheckPoint == 0) {
   int timesReset = 0; /* Used to determine whether a checkpoint was reloaded and then the virus went extinct */
   struct Node* tmp_Node; /* Used when the tree needs to be pruned */
 
-  if (print) {
-    printf("totTime, numVirus, numCellInfect, numCellUninfect, numLatentComp, numLatentIncomp, memory\n");
-  }
 
   printf("checkpoint time %f\n", checkPointTime);
+  if (print) {
+    printf("totTime, numVirus, numCellInfect, numCellUninfect, numLatentComp, numLatentIncomp, memory(GB)\n");
+  }
+
   /* Repeat the simulation numRep times */
   while (runFinish == 0){
     /* Reset the initial conditions for every simulation */
@@ -588,9 +600,10 @@ if (loadCheckPoint == 0) {
         totTime = sampleTimes[sampleCounter];
 
         /* If there are not enough viruses to sample, the virus should be on its way to going extinct. Stops the program */
-        if (numSampleVirus[sampleCounter] > numVirus) {
+        if (numSampleVirus[sampleCounter] > numVirus || numSampleLatent[sampleCounter] > numLatentComp + numLatentIncomp) {
           printf("Not enough viruses to sample %f, %ld, %ld, %ld, %ld, %ld, %f\n", totTime, numVirus, numCellInfect, numCellUninfect, numLatentComp, numLatentIncomp, totRate);
-          break;
+	  printf("Either re-run the program with a different seed, consider different simulation parameters, or number of viruses to sample.\nExiting the program.\n");
+          exit(1);
         }
           sampleEvent(r, &sampleCounter, numSampleVirus, numSampleLatent,
           virusArray, virusSampleArray, latentSampleArray, latentIncompArray, latentCompArray,

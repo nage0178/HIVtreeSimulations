@@ -1350,3 +1350,89 @@ long int maxComp, int totSampleVirus, int totSampleLatent, int timeLastSample, u
 
   writeCountsBinary(&counts, countsBiFile);
 }
+
+void writeLog(char* outfile, double * parameters, int sampleFileLength, long int numVirusInit,
+		long int numCellUninfectInit, long int numCellInfectInit, long int numLatentCompInit,
+	       long int	numLatentIncompInit, double * sampleTimes, int * numSampleVirus, 
+	       int * numSampleLatent, double mLBlood, double probLatent, double reactLatent, 
+	       double probDefect, double latIncompDeath, double latCompDeath, double lambdaInput, 
+	       double kappaInput) {
+	
+  char logFile[50] = "";
+  strcat(logFile, outfile);
+  strcat(logFile, "log.txt");
+  FILE *file;
+  file = fopen(logFile, "w");
+  char line[100];
+
+  sprintf(line, "mL Blood: \t%f\n", mLBlood);
+  fputs(line, file);
+
+  sprintf(line, "lambda: \t%f\n", lambdaInput);
+  fputs(line, file);
+
+  sprintf(line, "kappa: \t\t%f\n", kappaInput);
+  fputs(line, file);
+
+  sprintf(line, "d: \t\t%f\n", parameters[2]);
+  fputs(line, file);
+
+  sprintf(line, "delta: \t\t%f\n", parameters[3]);
+  fputs(line, file);
+
+  sprintf(line, "pi: \t\t%f\n", parameters[4]);
+  fputs(line, file);
+
+  sprintf(line, "c: \t\t%f\n", parameters[5]);
+  fputs(line, file);
+
+  sprintf(line, "eta: \t\t%f\n", probLatent);
+  fputs(line, file);
+
+  sprintf(line, "alpha: \t\t%f\n", reactLatent);
+  fputs(line, file);
+  
+  sprintf(line, "gamma: \t\t%f\n", probDefect);
+  fputs(line, file);
+
+  sprintf(line, "sigma: \t\t%f\n", latCompDeath);
+  fputs(line, file);
+
+  sprintf(line, "tau: \t\t%f\n", latIncompDeath);
+  fputs(line, file);
+
+
+
+  //Sample times info, initial cell concentrations
+  //
+  sprintf(line, "\nInitial Conditions:\n", parameters[5]);
+  fputs(line, file);
+
+
+  sprintf(line, "Initial number of viruses: %ld\n", numVirusInit);
+  fputs(line, file);
+  
+  sprintf(line, "Initial number of uninfected cells: %ld\n", numCellUninfectInit);
+  fputs(line, file);
+
+  sprintf(line, "Initial number of infected cells: %ld\n", numCellInfectInit);
+  fputs(line, file);
+
+  sprintf(line, "Initial number of latent replication competent cells: %ld\n", numLatentCompInit);
+  fputs(line, file);
+
+  sprintf(line, "Initial number of latent replication incompetent cells: %ld\n", numLatentIncompInit);
+  fputs(line, file);
+
+  sprintf(line, "\nSample Times:\n");
+  fputs(line, file);
+
+  for(int i = 0; i < sampleFileLength; i++ ) {
+  sprintf(line, "%f,%d,%d\n", sampleTimes[i], numSampleVirus[i], numSampleLatent[i]);
+  fputs(line, file);
+
+  }
+  fclose(file);
+
+  return;
+}

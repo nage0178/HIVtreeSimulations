@@ -188,4 +188,10 @@ long int maxComp, int totSampleVirus, int totSampleLatent, int timeLastSample, u
 unsigned long int findTreeStringMem(long int numVirus, long int numCellInfect, long int numLatentComp, long int numLatentIncomp, int numVirusSample, int numLatentSample, double timeLastSample) ;
 unsigned long int findLatentStringMem(long int numVirus, long int numCellInfect, long int numLatentComp, long int numLatentIncomp, int numVirusSample, int numLatentSample, double timeLastSample);
 
+void writeLog(char* outfile, double * parameters, int sampleFileLength, long int numVirusInit,
+                long int numCellUninfectInit, long int numCellInfectInit, long int numLatentCompInit,
+               long int numLatentIncompInit, double * sampleTimes, int * numSampleVirus,
+               int * numSampleLatent, double mLBlood, double probLatent, double reactLatent, 
+               double probDefect, double latIncompDeath, double latCompDeath, double lambdaInput, 
+	       double kappaInput);
 #endif
