@@ -654,7 +654,7 @@ struct Node** reallocArrayDecrease(long int* sizeArrayOld, struct Node** array, 
 /* Used to parse the control file. Assigns variables from control file*/
 void parseControlFile(char* fileName, char* sampleTime, double* mLBlood,
 double* parameters, double* probLatent, double* reactLatent, double* probDefect,
-double* latIncompDeath, double* latCompDeath, unsigned int* seed,
+double* latIncompDeath, double* latCompDeath, double* ARTstart, unsigned int* seed,
 int* seedChange, int* volChange, int* sampleFileChange) {
 
   FILE *file;
@@ -764,6 +764,9 @@ int* seedChange, int* volChange, int* sampleFileChange) {
 
     } else if (strcmp(removeWhite, "sigma") == 0) {
         *latCompDeath = strtod(input, &ptr);
+
+    } else if (strcmp(removeWhite, "ARTstart") == 0) {
+        *ARTstart = strtod(input, &ptr);
 
     } else {
       fprintf(stderr, "Control file keyword not recognized. Exiting.\n");
@@ -1302,7 +1305,7 @@ void writeCounts(long int numVirus, long int numCellInfect, long int numCellUnin
 long int numLatentIncomp, int numVirusSample, int numLatentSample, double totTime, double waitTime, char* treeString, char* latentString,
 double mLBlood, double* parameters, double probLatent, double reactLatent, double probDefect, double latIncompDeath,
 double latCompDeath, int sampleFileLength, int sampleCounter, long int maxActive, long int maxVirus, long int maxIncomp,
-long int maxComp, int totSampleVirus, int totSampleLatent, int timeLastSample, unsigned long int numEvents, char* outfile) {
+long int maxComp, int totSampleVirus, int totSampleLatent, int timeLastSample, unsigned long int numEvents, double ARTstart, char* outfile) {
   struct cellCountTimes counts;
   counts.numVirus = numVirus;
   counts.numCellInfect = numCellInfect;
@@ -1343,6 +1346,7 @@ long int maxComp, int totSampleVirus, int totSampleLatent, int timeLastSample, u
   counts.totSampleLatent = totSampleLatent;
   counts.timeLastSample = timeLastSample;
   counts.numEvents = numEvents;
+  counts.ARTstart = ARTstart;
 
   char countsBiFile[50] = "\0";
   strcat(countsBiFile, outfile);

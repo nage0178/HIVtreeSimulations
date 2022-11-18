@@ -92,6 +92,8 @@ struct cellCountTimes {
 
   unsigned long int numEvents;
 
+  double ARTstart;
+
 } ;
 
 struct sampleTimesLine {
@@ -157,7 +159,7 @@ struct Node** reallocArrayDecrease(long int* sizeArrayOld, struct Node** array, 
 
 void parseControlFile(char* fileName, char* sampleTime, double* mLBlood,
 double* parameters, double* probLatent, double* reactLatent, double* probDefect,
-double* latIncompDeath, double* latCompDeath, unsigned int* seed, int* seedChange, int* volChange, int* sampleFileChange);
+double* latIncompDeath, double* latCompDeath, double* ARTstart, unsigned int* seed, int* seedChange, int* volChange, int* sampleFileChange);
 
 
 void findCellTypes(struct Node** activeArray, struct Node** virusArray, struct Node** latentIncompArray, struct Node** latentCompArray,
@@ -183,7 +185,7 @@ void writeCounts(long int numVirus, long int numCellInfect, long int numCellUnin
 long int numLatentIncomp, int numVirusSample, int numLatentSample, double totTime, double waitTime, char* treeString, char* latentString,
 double mLBlood, double* parameters, double probLatent, double reactLatent, double probDefect, double latIncompDeath,
 double latCompDeath, int sampleFileLength, int sampleCounter, long int maxActive, long int maxVirus, long int maxIncomp,
-long int maxComp, int totSampleVirus, int totSampleLatent, int timeLastSample, unsigned long int numEvents, char* outfile);
+long int maxComp, int totSampleVirus, int totSampleLatent, int timeLastSample, unsigned long int numEvents, double ARTstart, char* outfile);
 
 unsigned long int findTreeStringMem(long int numVirus, long int numCellInfect, long int numLatentComp, long int numLatentIncomp, int numVirusSample, int numLatentSample, double timeLastSample) ;
 unsigned long int findLatentStringMem(long int numVirus, long int numCellInfect, long int numLatentComp, long int numLatentIncomp, int numVirusSample, int numLatentSample, double timeLastSample);

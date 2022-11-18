@@ -105,6 +105,7 @@ int main(int argc, char **argv) {
   int loadCheckPoint = 0;         /* Was the checkpoint loaded from previous time? Yes = 1, no = 0 */
   int startReload = 0;            /* Used so that an extra random number isn't drawn.
                                      Use the number from before the checkpoint. */
+  double ARTstart = 0;
 
   /* Stem will point to the root, needed for pruning the tree to work*/
   struct Node* stem = newNode(0, 0, NULL);
@@ -140,7 +141,7 @@ int main(int argc, char **argv) {
       case 'c':
         strncpy(controlFile, optarg, 100);
         parseControlFile(controlFile, sampleTimesFile, &mLBlood, parameters,
-          &probLatent, &reactLatent, &probDefect, &latIncompDeath, &latCompDeath,
+          &probLatent, &reactLatent, &probDefect, &latIncompDeath, &latCompDeath, &ARTstart,
           &RGSeed, &seedChange, &volChange, &sampleFileChange);
         break;
       /* Seed */
@@ -344,6 +345,7 @@ if (loadCheckPoint == 0) {
 
     //Sampling
     sampleFileLength = counts->numSampleTimes;
+    ARTstart = counts->ARTstart;
   }
 
   /* Counts of State Variables */
@@ -583,7 +585,7 @@ if (loadCheckPoint == 0) {
         numLatentIncomp, numVirusSample, numLatentSample, totTime, waitTime, treeString, latentString,
         mLBlood, parameters, probLatent, reactLatent, probDefect, latIncompDeath,
         latCompDeath, sampleFileLength, sampleCounter, maxActive, maxVirus, maxIncomp,
-        maxComp, totSampleVirus, totSampleLatent, timeLastSample, numEvents, outfile);
+        maxComp, totSampleVirus, totSampleLatent, timeLastSample, numEvents, ARTstart, outfile);
 
         /* Saves the state of the random number generator*/
         writeGslState(r, outfile);
@@ -595,22 +597,36 @@ if (loadCheckPoint == 0) {
         fflush(stdout);
 
       }
-      /* Checks if passed the sample time */
-       else if (totTime + waitTime > sampleTimes[sampleCounter]) {
-        totTime = sampleTimes[sampleCounter];
+      /* Checks if passed the sample time or the start of ART*/
+       else if (totTime + waitTime > sampleTimes[sampleCounter] || (ARTstart && totTime + waitTime > ARTstart )) {
+	       if (ARTstart && ARTstart < sampleTimes[sampleCounter] ) {
+			/* Set kappa equal to zero */
+			parameters[1] = 0;
 
-        /* If there are not enough viruses to sample, the virus should be on its way to going extinct. Stops the program */
-        if (numSampleVirus[sampleCounter] > numVirus || numSampleLatent[sampleCounter] > numLatentComp + numLatentIncomp) {
-          printf("Not enough viruses to sample %f, %ld, %ld, %ld, %ld, %ld, %f\n", totTime, numVirus, numCellInfect, numCellUninfect, numLatentComp, numLatentIncomp, totRate);
-	  printf("Either re-run the program with a different seed, consider different simulation parameters, or number of viruses to sample.\nExiting the program.\n");
-          exit(1);
-        }
-          sampleEvent(r, &sampleCounter, numSampleVirus, numSampleLatent,
-          virusArray, virusSampleArray, latentSampleArray, latentIncompArray, latentCompArray,
-          &numVirusSample, &numLatentSample, &numVirus, &numLatentIncomp, &numLatentComp, totTime);
+			/* Reset rates */
+  			prodInfectionRates[0] = (1 - probDefect) * (1 - probLatent) * parameters[1]; // UninfectToInfect
+  			prodInfectionRates[1] = probDefect * probLatent * parameters[1];             // UninfectToLatIncomp
+  			prodInfectionRates[2] = (1 - probDefect) * probLatent * parameters[1];       // UninfectToLatComp
+          		setInfectionRates(rates, prodInfectionRates, numCellUninfect, numVirus);
 
-        setRates(prodInfectionRates, parameters, reactLatent, latIncompDeath, latCompDeath,
-          rates, numVirus, numCellInfect, numCellUninfect, numLatentComp, numLatentIncomp);
+			ARTstart = 0;
+
+	       } else {
+        	totTime = sampleTimes[sampleCounter];
+
+        	/* If there are not enough viruses to sample, the virus should be on its way to going extinct. Stops the program */
+        	if (numSampleVirus[sampleCounter] > numVirus || numSampleLatent[sampleCounter] > numLatentComp + numLatentIncomp) {
+        	  printf("Not enough viruses to sample %f, %ld, %ld, %ld, %ld, %ld, %f\n", totTime, numVirus, numCellInfect, numCellUninfect, numLatentComp, numLatentIncomp, totRate);
+		  printf("Either re-run the program with a different seed, consider different simulation parameters, or number of viruses to sample.\nExiting the program.\n");
+        	  exit(1);
+        	}
+        	  sampleEvent(r, &sampleCounter, numSampleVirus, numSampleLatent,
+        	  virusArray, virusSampleArray, latentSampleArray, latentIncompArray, latentCompArray,
+        	  &numVirusSample, &numLatentSample, &numVirus, &numLatentIncomp, &numLatentComp, totTime);
+
+        	setRates(prodInfectionRates, parameters, reactLatent, latIncompDeath, latCompDeath,
+        	  rates, numVirus, numCellInfect, numCellUninfect, numLatentComp, numLatentIncomp);
+	       }
 
       } else {
         totTime = totTime + waitTime;
@@ -797,6 +813,7 @@ if (loadCheckPoint == 0) {
       printf("Did not finish %ld %f %ld %ld %ld %ld %ld\n", numEvents, totTime, numCellUninfect, numCellInfect, numVirus, numLatentComp, numLatentIncomp);
       if (restart) {
         printf("Starting again\n");
+	fflush(stdout);
 
         root_ptr = reset(stem, root_ptr, &sampleCounter, &numEvents, &totMem,
         activeArray, virusArray, latentIncompArray, latentCompArray, virusSampleArray, latentSampleArray,
