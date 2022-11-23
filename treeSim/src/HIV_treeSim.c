@@ -513,7 +513,7 @@ if (loadCheckPoint == 0) {
       rates, numVirus, numCellInfect, numCellUninfect, numLatentComp, numLatentIncomp);
 
     /* Continue simulating until the last time is reached or there are no viruses/infectee cells or no cells */
-    while (totTime < timeLastSample && numVirus + numCellInfect > 0 && numCellInfect + numCellUninfect > 0) {
+    while (totTime < timeLastSample && (numVirus + numCellInfect > 0 || parameters[1] == 0) && numCellInfect + numCellUninfect > 0) {
 
       /* Check the arrays are not too small */
       if (maxMem < totMem) {
