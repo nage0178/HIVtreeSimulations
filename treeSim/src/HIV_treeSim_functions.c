@@ -38,6 +38,24 @@ bool FloatEquals(double a, double b, double threshold) {
   return fabs(a-b) < threshold;
 }
 
+
+void printHelp() {
+        printf("Program options:\n\n");
+        printf("c: Name of control file. Does not have an effect if loading from a checkpoint. \n\n");
+        printf("h: Prints the program options and exits.\n\n");
+        printf("i: Input file with sampling times. In csv file format without a header. First column is the time, second is number of active sequences to sample, third is the number of latent sequences to sample. Does not have an effect if loading from a checkpoint.\n\n");
+        printf("l: Loads checkpoint files and restarts the run. Requires the prefix of the checkpoint files.\n\n");
+        printf("o: Output file prefix. \n\n");
+        printf("p: Frequency of printing counts and memory usage. If 0, counts are not printed. Otherwise, every p events the counts are printed.\n\n");
+        printf("r: Restart if population goes extinct. 0 if no, otherwise yes. \n\n");
+        printf("s: Starting seed. Does not have an effect if loading from a checkpoint.. \n\n");
+        printf("t: Time to checkpoint the program. The program cannot load a checkpoint and have another checkpoint later. \n\n");
+        printf("v: Volume of the simulation in mL. Does not have an effect if loading from a checkpoint.\n\n");
+
+	printf("For a more detail description, see https://github.com/nage0178/HIVtreeSimulations\n");
+
+}
+
 /* Create a new new node. Allocates memory for the node.
 Assignments values to the variables in the node structure */
 struct Node* newNode(double birth_add, int latentState, struct Node* parent_ptr) {
@@ -1360,7 +1378,7 @@ void writeLog(char* outfile, double * parameters, int sampleFileLength, long int
 	       long int	numLatentIncompInit, double * sampleTimes, int * numSampleVirus, 
 	       int * numSampleLatent, double mLBlood, double probLatent, double reactLatent, 
 	       double probDefect, double latIncompDeath, double latCompDeath, double lambdaInput, 
-	       double kappaInput) {
+	       double kappaInput, double ARTStart) {
 	
   char logFile[50] = "";
   strcat(logFile, outfile);
@@ -1427,6 +1445,12 @@ void writeLog(char* outfile, double * parameters, int sampleFileLength, long int
 
   sprintf(line, "Initial number of latent replication incompetent cells: %ld\n", numLatentIncompInit);
   fputs(line, file);
+
+  if (ARTStart)
+  	sprintf(line, "\nART Initiation: %f\n", ARTStart);
+  else 
+  	sprintf(line, "\nNo ART\n");
+  fputs(line,file);
 
   sprintf(line, "\nSample Times:\n");
   fputs(line, file);

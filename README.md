@@ -78,6 +78,7 @@ Program options:
 | **gamma**          | Simulation parameter: Proportion of viruses that are replication-incompetent |
 | **sigma**          | Simulation parameter: Death rate of actively infected cells (per day) |
 | **tau**            | Simulation parameter: Death rate of latent, replication-incompetent cells |
+| **ARTstart**       | Simulation parameter: Time of at which ART is initiated. Kappa becomes zero at this time |
 
 
 Options that can be specified in the control file or the command line (seed, volume, and sample\_times) can only be specified in one places.

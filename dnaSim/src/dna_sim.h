@@ -30,6 +30,7 @@ struct NodeSampledTree {
 
 } ;
 
+void printHelp();
 bool FloatEquals(double a, double b, double threshold);
 struct NodeSampledTree* newNodeSampledTree(double branchLength, int num);
 int makeTree(struct NodeSampledTree* node_ptr, char* treeString, int currChar);

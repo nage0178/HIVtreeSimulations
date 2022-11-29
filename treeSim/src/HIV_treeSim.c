@@ -27,6 +27,12 @@ int main(int argc, char **argv) {
 
   }
   printf("\n\n");
+  
+  if (argc < 2) {
+	  printf("Arguments are required.\nIf starting a new run, the sample times files must be provided as a command line arguement or specified in the control file.\nIf loading from a checkpoint, use the -l option.\n\n");
+	  printHelp();
+	  exit(1);
+  }
 
   double checkPointTime = -1;
   char* sampleTimesFile = malloc(sizeof(char)*100);
@@ -278,17 +284,7 @@ int main(int argc, char **argv) {
 
         break;
       case 'h':
-        printf("Program options:\n\n");
-        printf("c: Name of control file. Does not have an effect if loading from a checkpoint. \n\n");
-        printf("h: Prints the program options and exits.\n\n");
-        printf("i: Input file with sampling times. In csv file format without a header. First column is the time, second is number of active sequences to sample, third is the number of latent sequences to sample. Does not have an effect if loading from a checkpoint.\n\n");
-        printf("l: Loads checkpoint files and restarts the run. Requires the prefix of the checkpoint files.\n\n");
-        printf("o: Output file prefix. \n\n");
-        printf("p: Frequency of printing counts and memory usage. If 0, counts are not printed. Otherwise, every p events the counts are printed.\n\n");
-        printf("r: Restart if population goes extinct. 0 if no, otherwise yes. \n\n");
-        printf("s: Starting seed. Does not have an effect if loading from a checkpoint.. \n\n");
-        printf("t: Time to checkpoint the program. The program cannot load a checkpoint and have another checkpoint later. \n\n");
-        printf("v: Volume of the simulation in mL. Does not have an effect if loading from a checkpoint.\n\n");
+	printHelp();
         exit(1);
         break;
       default:
@@ -421,7 +417,7 @@ if (loadCheckPoint == 0) {
                numCellUninfectInit, numCellInfectInit, numLatentCompInit,
                numLatentIncompInit, sampleTimes, numSampleVirus,
                numSampleLatent, mLBlood, probLatent, reactLatent,
-               probDefect, latIncompDeath, latCompDeath, lambdaInput, kappaInput);
+               probDefect, latIncompDeath, latCompDeath, lambdaInput, kappaInput, ARTstart);
 
     /* Create arrays for the tips to be stored in */
     maxActive =  10000 * mLBlood;
@@ -487,8 +483,9 @@ if (loadCheckPoint == 0) {
   int timesReset = 0; /* Used to determine whether a checkpoint was reloaded and then the virus went extinct */
   struct Node* tmp_Node; /* Used when the tree needs to be pruned */
 
+  if (checkPointTime < timeLastSample) 
+  	printf("checkpoint time %f\n", checkPointTime);
 
-  printf("checkpoint time %f\n", checkPointTime);
   if (print) {
     printf("totTime, numVirus, numCellInfect, numCellUninfect, numLatentComp, numLatentIncomp, memory(GB)\n");
   }

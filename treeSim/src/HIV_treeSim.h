@@ -195,5 +195,7 @@ void writeLog(char* outfile, double * parameters, int sampleFileLength, long int
                long int numLatentIncompInit, double * sampleTimes, int * numSampleVirus,
                int * numSampleLatent, double mLBlood, double probLatent, double reactLatent, 
                double probDefect, double latIncompDeath, double latCompDeath, double lambdaInput, 
-	       double kappaInput);
+	       double kappaInput, double ARTstart);
+
+void printHelp();
 #endif

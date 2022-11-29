@@ -44,6 +44,23 @@ void checkModelInput(int regMatch) {
   }
 }
 
+void printHelp() {
+
+      printf("Input options: \n");
+      printf("a: \tAlpha for a +gamma model\n");
+      printf("b: \tnumber of bases. If the number of bases in the alignment does not match the input, the number of based in the alignment will be used.\n");
+      printf("h: \tPrints this message\n");
+      printf("f: \tStationary frequencies followed by rate matrix parameters. \n\tThe correct format is statFreq_A:statFreq_C:statFreq_G:statFreq-rateParameter_1:rateParameter_2:rateParameter_3:rateParameter_4:rateParameter_5:rateParameter_6\n\tNumbers must be in decimal format with a digit after the decimal.\n");
+      printf("i: \tInput fasta file with ancestral DNA sequence.\n");
+      printf("l: \tLatent history file from HIV_final_sim.c \n");
+      printf("o: \tOutput file name\n");
+      printf("r: \tOutgroup sequence for rooting\n");
+      printf("s: \tSeed\n");
+      printf("t: \tTree file from HIV_final_sim.c\n");
+      printf("u: \tSubstitution rate\n");
+      printf("For a more detail description, see https://github.com/nage0178/HIVtreeSimulations\n");
+
+}
 /* Create a new new node. Allocates memory for the node and the latency states
 structure. Assignment values to the variables in the node structure */
 struct NodeSampledTree* newNodeSampledTree(double branchLength, int num) {

@@ -180,18 +180,7 @@ int main(int argc, char **argv) {
         break;
 
      case 'h':
-      printf("Input options: \n");
-      printf("a: \tAlpha for a +gamma model\n");
-      printf("b: \tnumber of bases. If the number of bases in the alignment does not match the input, the number of based in the alignment will be used.\n");
-      printf("h: \tPrints this message\n");
-      printf("f: \tStationary frequencies followed by rate matrix parameters. \n\tThe correct format is statFreq_A:statFreq_C:statFreq_G:statFreq-rateParameter_1:rateParameter_2:rateParameter_3:rateParameter_4:rateParameter_5:rateParameter_6\n\tNumbers must be in decimal format with a digit after the decimal.\n");
-      printf("i: \tInput fasta file with ancestral DNA sequence.\n");
-      printf("l: \tLatent history file from HIV_final_sim.c \n");
-      printf("o: \tOutput file name\n");
-      printf("r: \tOutgroup sequence for rooting\n");
-      printf("s: \tSeed\n");
-      printf("t: \tTree file from HIV_final_sim.c\n");
-      printf("u: \tSubstitution rate\n");
+      printHelp();
       exit(0);
       break;
 
@@ -201,12 +190,16 @@ int main(int argc, char **argv) {
   }
 
   if (!latentHistoryFileEntered || !treeFileEntered) {
-    fprintf(stderr, "Did not provide the two required input files.\nExiting the program.\n");
+    fprintf(stderr, "Did not provide the two required input files, the tree file and the latent history file.\n");
+    printHelp();
+    fprintf(stderr, "Exiting the program.\n");
     exit(1);
   }
 
   if (!outFileNameGiven) {
-    fprintf(stderr, "Did not provide the output file name.\nExiting the program.\n");
+    fprintf(stderr, "Did not provide the output file name.\n");
+    printHelp();
+    fprintf(stderr, "Exiting the program.\n");
     exit(1);
   }
 
