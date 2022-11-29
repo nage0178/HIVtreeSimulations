@@ -10,5 +10,5 @@
          gamma = .95
          sigma = .00052
            tau = 0.00011
-        volume = 1.0
+        volume = .10
 	  seed = 1
