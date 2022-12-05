@@ -52,11 +52,11 @@ void printHelp() {
       printf("h: \tPrints this message\n");
       printf("f: \tStationary frequencies followed by rate matrix parameters. \n\tThe correct format is statFreq_A:statFreq_C:statFreq_G:statFreq-rateParameter_1:rateParameter_2:rateParameter_3:rateParameter_4:rateParameter_5:rateParameter_6\n\tNumbers must be in decimal format with a digit after the decimal.\n");
       printf("i: \tInput fasta file with ancestral DNA sequence.\n");
-      printf("l: \tLatent history file from HIV_final_sim.c \n");
+      printf("l: \tLatent history file from HIV_treeSim\n");
       printf("o: \tOutput file name\n");
       printf("r: \tOutgroup sequence for rooting\n");
       printf("s: \tSeed\n");
-      printf("t: \tTree file from HIV_final_sim.c\n");
+      printf("t: \tTree file from HIV_treeSim\n");
       printf("u: \tSubstitution rate\n");
       printf("For a more detail description, see https://github.com/nage0178/HIVtreeSimulations\n");
 
@@ -349,6 +349,10 @@ void printAlignment(char** alignment, int numSeq, int* nodeName, int* nodeLatent
 
   FILE *file;
   file = fopen(outFilename, "w");
+  if (! file) {
+	  fprintf(stderr, "File %s failed to open. Exiting the program.", outFilename);
+	  exit(1);
+  } 
   for (int i = 0; i < numSeq; i++) {
     if (nodeName[i] == -2) {
       fprintf(file, ">outgroup\n%s\n",alignment[i]);
@@ -561,6 +565,10 @@ void writeSeed(unsigned int RGSeed, char* outfile) {
 
   FILE *file;
   file = fopen(filename, "w");
+  if (! file) {
+	  fprintf(stderr, "Failed to open %s. Exiting the program\n", filename);
+	  exit(1);
+  }
   fputs(seed, file);
   fclose(file);
 
@@ -690,7 +698,7 @@ void makeInstantaneousRate(double instRate[4][4], double statFreq[], double mu) 
 
   }
   if (weightSum != 1) {
-    printf("Rescaling instantaneous rate matrix so the average substition rate is one.\nThen multiplying by the substituion rate. \n");
+    printf("Rescaling instantaneous rate matrix so the average substitution rate is one.\nThen multiplying by the substituion rate. \n");
   }
   if (weightSum == 0) {
     fprintf(stderr, "The average substition rate is zero. Exiting. \n");

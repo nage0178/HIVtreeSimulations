@@ -388,6 +388,10 @@ long int maxComp, int totSampleVirus, int totSampleLatent) {
 void writeTxt(char* fileName, char* fileContents) {
   FILE *file;
   file = fopen(fileName, "w");
+  if (! file) {
+	  fprintf(stderr,"%s failed to open. Exiting the program.\n", fileName);
+	  exit(1);
+  }
   fputs(fileContents, file);
   fclose(file);
   free(fileContents);
@@ -508,6 +512,10 @@ void readSampleTimes (double sampleTimes[], int numSampleVirus[], int numSampleL
 
   FILE *sampleTimesFile;
   sampleTimesFile = fopen(filename, "r");
+  if (! sampleTimesFile) {
+	  fprintf(stderr, "%s failed to open. Exiting the program.\n", filename);
+	  exit(1);
+  }
 
   char buff[200];
   char* ptr;
@@ -637,6 +645,10 @@ void writeSeed(unsigned int RGSeed, char* outfile) {
   strcat(seedFile, "seed.txt");
   FILE *file;
   file = fopen(seedFile, "w");
+  if (! file) {
+	  fprintf("%s failed to open. Exiting the program.\n", seedFile);
+	  exit(1);
+  }
   fputs(seed, file);
   fclose(file);
 
@@ -1385,6 +1397,10 @@ void writeLog(char* outfile, double * parameters, int sampleFileLength, long int
   strcat(logFile, "log.txt");
   FILE *file;
   file = fopen(logFile, "w");
+  if (!file) {
+	  fprintf("%s failed to open. Exiting the program.\n", logFile);
+	  exit(1);
+  }
   char line[100];
 
   sprintf(line, "mL Blood: \t%f\n", mLBlood);

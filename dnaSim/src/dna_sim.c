@@ -22,13 +22,10 @@ gsl_rng * r;  /* global generator */
 
 int main(int argc, char **argv) {
 
-  /* Prints the command that the program is running with */
-  printf("Command: \n");
-  for (int i =0; i < argc; i ++ ) {
-    printf("%s ", argv[i]);
+	if (argc < 2) {
+		printf("usage: dna_sim [-a] [-b] [-h] [-f] [-i] <-l> <-o> [-r] [-s] <-t> [-u]\n\n");
+	}
 
-  }
-  printf("\n\n");
 
   /* Set up random number generator */
   const gsl_rng_type * T;
@@ -122,6 +119,11 @@ int main(int argc, char **argv) {
       case 'i':
         strncpy(inputFasta, optarg, 30);
         fastaSeq = string_from_file(inputFasta);
+	
+ 	 if (! fastaSeq) {
+ 	         fprintf(stderr,"Exiting the program.\n");
+ 	         exit(1);
+ 	 }
         randomStart = 0;
         break;
 
@@ -185,7 +187,8 @@ int main(int argc, char **argv) {
       break;
 
     default:
-      abort();
+    fprintf(stderr, " Use -h to see valid arguments. Exiting the program.\n", c);
+    exit(1);
     }
   }
 
@@ -210,6 +213,10 @@ int main(int argc, char **argv) {
   /* Read in newick format file. File needs to have internal node labels and
   branch lengths */
   char *treeString = string_from_file(treeFile);
+  if (! treeString) {
+	  fprintf(stderr,"Exiting the program.\n");
+	  exit(1);
+  }
 
   /* Make a tree from the input tree file */
   struct NodeSampledTree* root_ptr = newNodeSampledTree(0, 1);
@@ -222,6 +229,10 @@ int main(int argc, char **argv) {
   /* Add the latent history to the tree from the input file */
   FILE *latentFile;
   latentFile = fopen(latentHistoryFile, "r");
+  if (! latentFile) {
+	  fprintf(stderr,"%s failed to open. Exiting the program.\n", latentHistoryFile);
+	  exit(1);
+  }
   readLatent(root_ptr, latentFile);
   fclose(latentFile);
 

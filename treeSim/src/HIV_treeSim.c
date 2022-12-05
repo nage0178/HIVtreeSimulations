@@ -20,15 +20,8 @@
 gsl_rng * r;  /* global generator */
 
 int main(int argc, char **argv) {
-  /* Prints the command that the program is running with */
-  printf("Command: \n");
-  for (int i =0; i < argc; i ++ ) {
-    printf("%s ", argv[i]);
-
-  }
-  printf("\n\n");
-  
   if (argc < 2) {
+	  printf("usage: HIV_treeSim [-c] [-h] [-i] [-l] [-o] [-p] [-r] [-s] [-t] [-v]\n\n ");
 	  printf("Arguments are required.\nIf starting a new run, the sample times files must be provided as a command line arguement or specified in the control file.\nIf loading from a checkpoint, use the -l option.\n\n");
 	  printHelp();
 	  exit(1);
@@ -288,7 +281,10 @@ int main(int argc, char **argv) {
         exit(1);
         break;
       default:
-        abort();
+	
+	fprintf(stderr, "Use -h option to see valid command line arguements. Exiting.\n");
+
+	exit(1);
     }
   }
 
