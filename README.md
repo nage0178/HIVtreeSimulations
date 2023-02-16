@@ -22,9 +22,9 @@ git clone https://github.com/nage0178/HIVtreeSimulations.git
 To compile the program,
 
 ```
-cd ~/HIVtreeSimulations/treeSim
+cd HIVtreeSimulations/treeSim
 make
-cd ~/HIVtreeSimulations/dnaSim
+cd HIVtreeSimulations/dnaSim
 make
 ```
 
